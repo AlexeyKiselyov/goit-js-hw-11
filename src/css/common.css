@@ -12,6 +12,20 @@ body {
   line-height: 1.5;
 }
 
+.search-form {
+  max-width: 315px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+
+.load-more {
+  display: block;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 img {
   display: block;
   max-width: 100%;
