@@ -1,14 +1,10 @@
 import axios from 'axios';
 // ------------------------------
 
-// const BASE_URL = 'https://pixabay.com/api';
-
 export class GallerySearch {
   static query = '';
   static page = 1;
   static pageLimit = 40;
-  static maxPages = 500;
-  static totalPages = GallerySearch.maxPages / GallerySearch.pageLimit;
 
   static async searchGallery(query) {
     if (query) {
@@ -26,10 +22,12 @@ export class GallerySearch {
         safesearch: 'true',
       },
     };
-    const request = await axios(config);
+    try {
+      const request = await axios(config);
 
-    return request.data.hits;
+      return request.data;
+    } catch (err) {
+      console.log;
+    }
   }
 }
-
-// ${BASE_URL}?q=${q}&page=${GallerySearch.page}&per_page=${GallerySearch.pageLimit}

@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { Notify } from 'notiflix';
 import { GallerySearch } from './js/galleryAPI';
 import { galleryMarkup } from './js/galleryMarkup';
-
 // ------------------------------
+
 const refFormSearch = document.querySelector('.search-form');
 const refGallery = document.querySelector('.gallery');
 const refLoadMoreBtn = document.querySelector('.load-more');
@@ -14,23 +13,41 @@ refLoadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 refLoadMoreBtn.hidden = true;
 
 async function onLoadMoreBtnClick() {
-  console.log('load more');
   GallerySearch.page += 1;
   const galleryArr = await GallerySearch.searchGallery();
-  refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr));
 
-  if (GallerySearch.page === GallerySearch.totalPages) {
+  if (GallerySearch.pageLimit * GallerySearch.page >= galleryArr.totalHits) {
     refLoadMoreBtn.hidden = true;
+    Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
   }
+  console.log(galleryArr);
+  refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr.hits));
+  const { height: cardHeight } =
+    refGallery.firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
 
 async function onFormSearchSubmit(e) {
   e.preventDefault();
-  refGallery.innerHTML = '';
+  GallerySearch.page = 1;
   const query = e.target.elements.searchQuery.value.trim();
   const galleryArr = await GallerySearch.searchGallery(query);
   console.log(galleryArr);
-  console.log(GallerySearch.totalPages);
-  refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr));
+
+  if (!galleryArr.totalHits) {
+    refLoadMoreBtn.hidden = true;
+    return Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
+  refGallery.innerHTML = '';
+  refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr.hits));
+  Notify.success(`Hooray! We found ${galleryArr.totalHits} images.`);
   refLoadMoreBtn.hidden = false;
 }
