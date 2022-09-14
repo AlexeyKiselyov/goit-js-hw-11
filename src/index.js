@@ -12,23 +12,23 @@ refLoadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 
 refLoadMoreBtn.hidden = true;
 
-async function onLoadMoreBtnClick() {
+function onLoadMoreBtnClick() {
   GallerySearch.page += 1;
-  const galleryArr = await GallerySearch.searchGallery();
+  GallerySearch.searchGallery().then(galleryArr => {
+    if (GallerySearch.pageLimit * GallerySearch.page >= galleryArr.totalHits) {
+      refLoadMoreBtn.hidden = true;
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
+    refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr.hits));
+    const { height: cardHeight } =
+      refGallery.firstElementChild.getBoundingClientRect();
 
-  if (GallerySearch.pageLimit * GallerySearch.page >= galleryArr.totalHits) {
-    refLoadMoreBtn.hidden = true;
-    Notify.failure(
-      "We're sorry, but you've reached the end of search results."
-    );
-  }
-  refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr.hits));
-  const { height: cardHeight } =
-    refGallery.firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
   });
 }
 

@@ -11,7 +11,7 @@ export class GallerySearch {
       GallerySearch.query = query;
     }
     const config = {
-      baseURL: 'https://pixabay.com/api',
+      baseURL: 'https://pixabay.com/api/',
       params: {
         q: GallerySearch.query,
         page: GallerySearch.page,
