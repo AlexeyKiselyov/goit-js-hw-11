@@ -22,7 +22,6 @@ async function onLoadMoreBtnClick() {
       "We're sorry, but you've reached the end of search results."
     );
   }
-  console.log(galleryArr);
   refGallery.insertAdjacentHTML('beforeend', galleryMarkup(galleryArr.hits));
   const { height: cardHeight } =
     refGallery.firstElementChild.getBoundingClientRect();
@@ -38,7 +37,6 @@ async function onFormSearchSubmit(e) {
   GallerySearch.page = 1;
   const query = e.target.elements.searchQuery.value.trim();
   const galleryArr = await GallerySearch.searchGallery(query);
-  console.log(galleryArr);
 
   if (!galleryArr.totalHits) {
     refLoadMoreBtn.hidden = true;
